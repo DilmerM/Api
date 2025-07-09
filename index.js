@@ -44,14 +44,23 @@ mysqlConnection.connect((err) => {
 //ejecutar el server : en puerto 3000
 app.listen(3000, () => console.log('Servidor en puerto 3000'));
 
-//Osman  Modulo Personas         INICIO         se hace de esta forma por que utilizo una funcion para exportarlo 
+// Osman  Modulo Personas         INICIO         se hace de esta forma por que utilizo una funcion para exportarlo 
 // ejemplo de un get             http://localhost:3000/personas/1
 app.use('/personas', require('./Personas.js')(mysqlConnection));
-//Dilmer Modulo Geolocalizacion  INICIO         en mi  caso lo tengo como lo hizo el lic 
+// Dilmer Modulo Geolocalizacion  INICIO         en mi  caso lo tengo como lo hizo el lic 
 // ejemplo de un get             http://localhost:3000/Geolocalizacion/direcciones_geograficas/2     
 const GeolocalizacionRoutes = require('./Geolocalizacion');
 app.use('/Geolocalizacion', GeolocalizacionRoutes);
 
+
+// Sarai Modulo Reservas  INICIO     
+// ejemplo de un get             http://localhost:3000/Geolocalizacion/direcciones_geograficas/2     
+const ReservasRoutes = require('./Reservas');
+app.use('/reservas', ReservasRoutes);
+// Sarai Modulo Servcios  INICIO    
+// ejemplo de un get             http://localhost:3000/Geolocalizacion/direcciones_geograficas/2     
+const ServicioRoutes = require('./Servicio');
+app.use('/servicios', ServicioRoutes);
 
 
 
