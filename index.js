@@ -62,6 +62,9 @@ app.use('/reservas', ReservasRoutes);
 const ServicioRoutes = require('./Servicio');
 app.use('/servicios', ServicioRoutes);
 
+const Reporte_Generadosrouter = require ('./reporte.js');
+app.use('/reporte', Reporte_Generadosrouter);
+
 
 
 
