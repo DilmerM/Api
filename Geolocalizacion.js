@@ -249,7 +249,7 @@ router.delete('/direcciones_geograficas/:id', (req, res) => {
 
 //INICIO DE LOS METODOS DE LA TABLA PUNTOS GEOGRAFICOS
 
-// Obtener un punto geografico por ID   SELECT - GET
+// Obtener un punto geografico por ID   SELECT - GET   http://localhost:3000/Geolocalizacion/puntos_geograficos/5
 router.get('/puntos_geograficos/:id', (req, res) => {
     const id = req.params.id;
     const sql = "CALL SP_SeleccionarPuntoGeograficoPorID(?)";
@@ -265,7 +265,7 @@ router.get('/puntos_geograficos/:id', (req, res) => {
 });
 
 
-// Insertar un nuevo punto geografico   INSERT - POST
+// Insertar un nuevo punto geografico   INSERT - POST    http://localhost:3000/Geolocalizacion/puntos_geograficos
 router.post('/puntos_geograficos', (req, res) => {
     const { latitud, longitud, nombre_punto, descripcion } = req.body;
     const sql = "CALL SP_InsertarPuntoGeografico(?, ?, ?, ?, @nuevo_id); SELECT @nuevo_id AS id_punto_geografico;";
@@ -287,7 +287,7 @@ router.post('/puntos_geograficos', (req, res) => {
 });
 
 
-// Actualizar un punto geografico   UPDATE - PUT
+// Actualizar un punto geografico   UPDATE - PUT   http://localhost:3000/Geolocalizacion/puntos_geograficos/6
 router.put('/puntos_geograficos/:id', (req, res) => {
     const id = req.params.id;
     const { latitud, longitud, nombre_punto, descripcion } = req.body;
@@ -306,7 +306,7 @@ router.put('/puntos_geograficos/:id', (req, res) => {
     );
 });
 
-// Eliminar un punto geográfico por ID desde la API
+// Eliminar un punto geográfico por ID desde la API       http://localhost:3000/Geolocalizacion/puntos_geograficos/10
 router.delete('/puntos_geograficos/:id', (req, res) => {
     const id = req.params.id;
     const sql = "CALL SP_EliminarPuntoGeografico(?)";

@@ -10,7 +10,7 @@ var mysqlConnection = mysql.createConnection({
     multipleStatements: true
 });
 
-// POST crear un nuevo servicio
+// POST insert crear un nuevo servicio
 router.post('/', (req, res) => {
     const {
         nombre_servicio,
@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
     });
 });
 
-// GET un servicio por ID
+// GET un servicio por ID       http://localhost:3000/servicios/10   trae todos los servicios por id
 router.get('/:id', (req, res) => {
     const id_servicio = req.params.id;
     const sql = 'CALL SP_SeleccionarServicioPorID(?)';
@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// PUT actualizar servicio por ID
+// PUT actualizar servicio por ID  
 router.put('/:id', (req, res) => {
     const {
         nombre_servicio,
@@ -89,7 +89,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// GET todos los servicios
+// GET todos los servicios      http://localhost:3000/servicios trae todos los servicios 
 router.get('/', (req, res) => {
     const sql = 'SELECT * FROM Servicio';
     mysqlConnection.query(sql, (err, results) => {
@@ -98,4 +98,21 @@ router.get('/', (req, res) => {
     });
 });
 
+// Eliminar un servicio por ID desde la API http://localhost:3000/1 <-- reemplace el (1) por el id cualquiera
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "CALL SP_EliminarServicio(?)";
+
+    mysqlConnection.query(sql, [id], (err, results) => {
+        if (!err) {
+            res.json({ mensaje: "Servicio eliminado correctamente" });
+        } else {
+            console.error("Error al eliminar el servicio:", err);
+            res.status(500).send('Error al eliminar el servicio');
+        }
+    });
+});
+mysqlConnection.on('error', (err) => {
+    console.error('Error de conexión MySQL:', err.code);
+});
 module.exports = router;

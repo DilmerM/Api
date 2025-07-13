@@ -10,7 +10,24 @@ var mysqlConnection = mysql.createConnection({
     multipleStatements: true
 });
 
-// POST crear una nueva reserva
+// GET todas las reservas http://localhost:3000/reservas        trae todas las reservas 
+router.get('/', (req, res) => {
+    mysqlConnection.query('SELECT * FROM Reservas', (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json(results);
+    });
+});
+
+// GET una reserva por ID   http://localhost:3000/reservas/26    trae la reserva de cliente por id
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    mysqlConnection.query('CALL SP_SeleccionarReservaDetallePorID(?)', [id], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json(results[0]);
+    });
+});
+
+// POST crear una nueva reserva  http://localhost:3000/reservas
 router.post('/', (req, res) => {
     const datos = req.body;
     const sql = 'CALL SP_InsertarReserva(?, ?, ?, ?, ?, ?, ?, ?, ?, @id_reserva); SELECT @id_reserva AS id_reserva;';
@@ -34,24 +51,8 @@ router.post('/', (req, res) => {
     );
 });
 
-// GET todas las reservas
-router.get('/', (req, res) => {
-    mysqlConnection.query('SELECT * FROM Reservas', (err, results) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json(results);
-    });
-});
 
-// GET una reserva por ID
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    mysqlConnection.query('CALL SP_SeleccionarReservaDetallePorID(?)', [id], (err, results) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json(results[0]);
-    });
-});
-
-// PUT actualizar reserva por ID
+// PUT actualizar reserva por ID http://localhost:3000/reservas/26  <-- reemplaza el (26) por id cualquiera
 router.put('/:id', (req, res) => {
     const { id } = req.params;
     const datos = req.body;
@@ -74,6 +75,21 @@ router.put('/:id', (req, res) => {
             res.json({ mensaje: 'Reserva actualizada correctamente' });
         }
     );
+});
+
+// Eliminar una reserva por ID desde la API       http://localhost:3000/reservas/26
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "CALL SP_EliminarReserva(?)";
+
+    mysqlConnection.query(sql, [id], (err, results) => {
+        if (!err) {
+            res.json({ mensaje: "Reserva eliminada correctamente" });
+        } else {
+            console.error("Error al eliminar la reserva:", err);
+            res.status(500).send('Error al eliminar la reserva');
+        }
+    });
 });
 
 module.exports = router;
