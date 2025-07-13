@@ -1,7 +1,7 @@
 // exportar datos para trabajar las apis
 const mysql = require ('mysql');
-const Express = require('express');
-const Router = express.Router(); 
+const express = require('express');
+const router = express.Router(); 
 
 // conexion para probar la base de Datos 
 const mysqlConnection = mysql.createConnection({
