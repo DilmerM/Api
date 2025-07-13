@@ -106,6 +106,23 @@ router.put('/direcciones/:id', (req, res) => {
 });
 
 
+// Eliminar una dirección por ID desde la API
+router.delete('/direcciones/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "CALL SP_EliminarDireccion(?)";
+
+    mysqlConnection.query(sql, [id], (err, results) => {
+        if (!err) {
+            res.json({ mensaje: "Dirección eliminada correctamente" });
+        } else {
+            console.error("Error al eliminar la dirección:", err);
+            res.status(500).send('Error al eliminar la dirección');
+        }
+    });
+});
+
+
+
 // INICIO DIRECCION GEOGRAFICA
 
 
@@ -211,9 +228,26 @@ router.put('/direcciones_geograficas/:id', (req, res) => {
         }
     );
 });
+
+// Eliminar una dirección geográfica por ID desde la API
+router.delete('/direcciones_geograficas/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "CALL SP_EliminarDireccionGeografica(?)";
+
+    mysqlConnection.query(sql, [id], (err, results) => {
+        if (!err) {
+            res.json({ mensaje: "Dirección geográfica eliminada correctamente" });
+        } else {
+            console.error("Error al eliminar la dirección geográfica:", err);
+            res.status(500).send('Error al eliminar la dirección geográfica');
+        }
+    });
+});
+
 // FIN DIRECCION GEOGRAFICA;
 
 
+//INICIO DE LOS METODOS DE LA TABLA PUNTOS GEOGRAFICOS
 
 // Obtener un punto geografico por ID   SELECT - GET
 router.get('/puntos_geograficos/:id', (req, res) => {
@@ -271,6 +305,23 @@ router.put('/puntos_geograficos/:id', (req, res) => {
         }
     );
 });
+
+// Eliminar un punto geográfico por ID desde la API
+router.delete('/puntos_geograficos/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "CALL SP_EliminarPuntoGeografico(?)";
+
+    mysqlConnection.query(sql, [id], (err, results) => {
+        if (!err) {
+            res.json({ mensaje: "Punto geográfico eliminado correctamente" });
+        } else {
+            console.error("Error al eliminar el punto geográfico:", err);
+            res.status(500).send('Error al eliminar el punto geográfico');
+        }
+    });
+});
+
+
 // FIN PUNTO GEOGRAFICO;
 
 module.exports = router;//obligatorio
