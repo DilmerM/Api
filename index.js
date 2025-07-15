@@ -65,14 +65,12 @@ app.use('/reportes', Reporte_Generadosrouter);
 
 
 
-
+// Henrry Modulo Servcios  INICIO   get  http://localhost:3000/eventos
 const EventosRoutes = require('./Eventos');
 app.use('/Eventos', EventosRoutes);
-
-
-
+// Henrry Modulo Servcios  INICIO
 const ActividadesRoutes = require('./Actividades');
 app.use('/Actividades', ActividadesRoutes);
-
+// Henrry Modulo Servcios  INICIO
 const AsistenciasRouter = require('./Asistencias');
 app.use('/Asistencias', AsistenciasRouter);
