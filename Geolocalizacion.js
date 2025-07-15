@@ -1,9 +1,8 @@
-
+// Dilmer Eli Nuñez Moreira   N° 20221020048
+// Equipo #2
 const mysql = require('mysql');
 const express = require('express');
-const bp = require('body-parser');
 const router = express.Router();
-// obligatorio tener esto!!
 
 
 
@@ -72,7 +71,7 @@ router.post('/direcciones', (req, res) => {
 });
 
 
-// Actualizar una direccoón   UPDATE PUT
+// Actualizar una dirección   UPDATE PUT
 router.put('/direcciones/:id', (req, res) => {
     const id = req.params.id;
     const {
@@ -120,8 +119,6 @@ router.delete('/direcciones/:id', (req, res) => {
         }
     });
 });
-
-
 
 // INICIO DIRECCION GEOGRAFICA
 

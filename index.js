@@ -1,6 +1,3 @@
-// Dilmer Eli Nuñez Moreira   N° 20221020048
-// Equipo #2
-
 //constante para el paquete de mysql
 const mysql = require('mysql');
 
