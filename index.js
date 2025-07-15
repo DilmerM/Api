@@ -43,34 +43,33 @@ app.listen(3000, () => console.log('Servidor en puerto 3000'));
 
 // Osman  Modulo Personas         INICIO         Se hace de esta forma por que utilizo una funcion para exportarlo 
 // ejemplo de un get             http://localhost:3000/personas/1
-app.use('/personas', require('./Personas.js')(mysqlConnection));
+app.use('/personas', require('./Metodos_Crud/Personas.js')(mysqlConnection));
 // Dilmer Modulo Geolocalizacion  INICIO         En mi  caso lo tengo como lo hizo el lic 
 // ejemplo de un get             http://localhost:3000/Geolocalizacion/direcciones_geograficas/2     
-const GeolocalizacionRoutes = require('./Geolocalizacion');
+const GeolocalizacionRoutes = require('./Metodos_Crud/Geolocalizacion.js');
 app.use('/Geolocalizacion', GeolocalizacionRoutes);
-
 
 // Sarai Modulo Reservas  INICIO     
 
-const ReservasRoutes = require('./Reservas');
+const ReservasRoutes = require('./Metodos_Crud/Reservas.js');
 app.use('/reservas', ReservasRoutes);
 
 // Sarai Modulo Servcios  INICIO    
 
-const ServicioRoutes = require('./Servicio');
+const ServicioRoutes = require('./Metodos_Crud/Servicio.js');
 app.use('/servicios', ServicioRoutes);
 
-const Reporte_Generadosrouter = require ('./reportes.js');
+const Reporte_Generadosrouter = require ('./Metodos_Crud/reportes.js');
 app.use('/reportes', Reporte_Generadosrouter);
 
 
 
 // Henrry Modulo Servcios  INICIO   get  http://localhost:3000/eventos
-const EventosRoutes = require('./Eventos');
+const EventosRoutes = require('./Metodos_Crud/Eventos.js');
 app.use('/Eventos', EventosRoutes);
 // Henrry Modulo Servcios  INICIO
-const ActividadesRoutes = require('./Actividades');
+const ActividadesRoutes = require('./Metodos_Crud/Actividades.js');
 app.use('/Actividades', ActividadesRoutes);
 // Henrry Modulo Servcios  INICIO
-const AsistenciasRouter = require('./Asistencias');
+const AsistenciasRouter = require('./Metodos_Crud/Asistencias.js');
 app.use('/Asistencias', AsistenciasRouter);
