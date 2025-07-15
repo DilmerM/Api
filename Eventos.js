@@ -1,6 +1,4 @@
 const express = require('express');
-const app = express();
-const PORT = 3000;
  const mysql = require('mysql');
 const router = express.Router();
 
@@ -130,11 +128,6 @@ router.delete('/:id', (req, res) => {
             res.status(500).send('Error al eliminar el evento');
         }
     });
-});
-
-// Manejador de error de conexión
-mysqlConnection.on('error', (err) => {
-    console.error('Error de conexión MySQL:', err.code);
 });
 
 module.exports = router

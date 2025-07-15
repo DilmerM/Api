@@ -1,6 +1,6 @@
 const express = require('express');
-const app = express();
-const PORT = 3000;
+const mysql = require('mysql');
+const router = express.Router();
 
 var mysqlConnection = mysql.createConnection({
     host: '142.44.161.115',
@@ -9,72 +9,74 @@ var mysqlConnection = mysql.createConnection({
     database: '25-1700P4PAC2E2',
     multipleStatements: true
 });
+router.get('/', (req, res) => {
+    const query = 'SELECT * FROM Asistencia_actividad';
+    mysqlConnection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener asistencias:', err);
+            return res.status(500).json({ mensaje: 'Error en el servidor' });
+        }
+        res.json(results);
+    });
+});
+// GET: Estadísticas de asistencia por evento
+router.get('/evento/:id/asistencia', (req, res) => {
+    const id_evento = req.params.id;
+    const sql = 'CALL SP_ObtenerEstadisticasAsistenciaPorEvento(?)';
 
-app.use(express.json());
+    mysqlConnection.query(sql, [id_evento], (err, results) => {
+        if (err) {
+            console.error('Error al obtener estadísticas:', err);
+            return res.status(500).json({ error: 'Error al obtener estadísticas de asistencia' });
+        }
 
-// Datos simulados
-let eventos = [
-    { id_evento: 1, nombre_evento: "Conferencia Tech 2025" },
-    { id_evento: 2, nombre_evento: "Feria de Ciencias" }
-];
+        const estadisticas = results[0][0];
+        if (!estadisticas) {
+            return res.status(404).json({ mensaje: 'Evento no encontrado o sin registros' });
+        }
 
-let asistencias = [
-    { id_registro_asistencia: 1, id_evento: 1, estado_asistencia: "Registrado" },
-    { id_registro_asistencia: 2, id_evento: 1, estado_asistencia: "Asistió" },
-    { id_registro_asistencia: 3, id_evento: 1, estado_asistencia: "Canceló" },
-    { id_registro_asistencia: 4, id_evento: 2, estado_asistencia: "No Asistió" },
-];
-
-//GET: Estadísticas de asistencia por evento
-app.get('/eventos/:id/asistencia', (req, res) => {
-    const id_evento = parseInt(req.params.id);
-    const evento = eventos.find(e => e.id_evento === id_evento);
-    if (!evento) {
-        return res.status(404).json({ mensaje: 'Evento no encontrado' });
-    }
-
-    const registros = asistencias.filter(a => a.id_evento === id_evento);
-
-    const total_registrados = registros.filter(a => a.estado_asistencia === "Registrado").length;
-    const total_asistentes = registros.filter(a => a.estado_asistencia === "Asistió").length;
-    const total_no_asistentes = registros.filter(a => a.estado_asistencia === "No Asistió").length;
-    const total_cancelaciones = registros.filter(a => a.estado_asistencia === "Canceló").length;
-    const total_registros = registros.length;
-
-    res.json({
-        nombre_evento: evento.nombre_evento,
-        total_registrados,
-        total_asistentes,
-        total_no_asistentes,
-        total_cancelaciones,
-        total_registros
+        res.json(estadisticas);
     });
 });
 
-//POST: Registrar una nueva asistencia
-app.post('/asistencias', (req, res) => {
-    const nueva = {
-        id_registro_asistencia: asistencias.length + 1,
-        id_evento: req.body.id_evento,
-        estado_asistencia: req.body.estado_asistencia
-    };
-    asistencias.push(nueva);
-    res.status(201).json(nueva);
+// POST: Registrar nueva asistencia
+router.post('/', (req, res) => {
+    const { id_evento, id_persona, estado_asistencia } = req.body;
+    const sql = 'CALL SP_RegistrarAsistencia(?, ?, ?, @p_id_registro)';
+
+    mysqlConnection.query(sql, [id_evento, id_persona, estado_asistencia], (err, results) => {
+        if (err) {
+            console.error('Error al registrar asistencia:', err);
+            return res.status(500).json({ error: 'Error al registrar la asistencia' });
+        }
+
+        const id_registro_asistencia = results[1][0].id_registro_asistencia;
+        res.status(201).json({
+            mensaje: 'Asistencia registrada correctamente',
+            id_registro_asistencia
+        });
+    });
 });
 
-// 👉 PUT: Actualizar una asistencia existente
-app.put('/asistencias/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const registro = asistencias.find(a => a.id_registro_asistencia === id);
-    if (!registro) {
-        return res.status(404).json({ mensaje: 'Registro de asistencia no encontrado' });
-    }
+// PUT: Actualizar estado de asistencia
+router.put('/:id', (req, res) => {
+    const id_registro_asistencia = req.params.id;
+    const { estado_asistencia } = req.body;
+    const sql = 'CALL SP_ActualizarEstadoAsistencia(?, ?)';
 
-    registro.estado_asistencia = req.body.estado_asistencia;
-    res.json(registro);
+    mysqlConnection.query(sql, [id_registro_asistencia, estado_asistencia], (err, results) => {
+        if (err) {
+            console.error('Error al actualizar asistencia:', err);
+            return res.status(500).json({ error: 'Error al actualizar la asistencia' });
+        }
+
+        res.json({ mensaje: 'Estado de asistencia actualizado correctamente' });
+    });
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// Manejador de error de conexión
+mysqlConnection.on('error', (err) => {
+    console.error('Error de conexión MySQL:', err.code);
 });
+
+module.exports = router;

@@ -66,3 +66,13 @@ app.use('/reportes', Reporte_Generadosrouter);
 
 
 
+const EventosRoutes = require('./Eventos');
+app.use('/Eventos', EventosRoutes);
+
+
+
+const ActividadesRoutes = require('./Actividades');
+app.use('/Actividades', ActividadesRoutes);
+
+const AsistenciasRouter = require('./Asistencias');
+app.use('/Asistencias', AsistenciasRouter);

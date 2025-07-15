@@ -13,14 +13,7 @@ port: 3306,
  multipleStatements: true
 })
 
-// Verificar la conexión
-mysqlConnection.connect((err) => {
-    if (!err) {
-        console.log('Conexión exitosa');
-    } else {
-        console.log('Error al conectar a la base de datos, error:'.err);
-    }
-});
+
 // creacion del get  tabla reporte de eventos 
 router.get("/getreporte", (req, res)=>{
     const { tabla, id} = req.query;
